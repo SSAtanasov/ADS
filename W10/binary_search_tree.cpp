@@ -1,17 +1,10 @@
 // ============================================================
 // BINARY SEARCH TREE - INTERACTIVE MENU VERSION
 // ============================================================
-// ВАЖНО: Този файл използва UTF-8 encoding за кирилица
-// 
-// За правилна работа на Windows:
-// 1. Уверете се че файлът е запазен като UTF-8
-// 2. В CMD преди стартиране напишете: chcp 65001
-// 3. Или компилирайте с: g++ -fexec-charset=CP1251 binary_search_tree.cpp
-//
-// На Linux/Mac работи директно с UTF-8
-// ============================================================
 
 #include <iostream>
+#include <windows.h>
+#include <clocale>
 using namespace std;
 
 struct tnode {
@@ -135,19 +128,25 @@ void deleteTree(tnode* tree) {
 }
 
 int main() {
+    // WINDOWS - За правилна кирилица:
+    system("chcp 65001 > nul");
+    SetConsoleCP(65001);
+    SetConsoleOutputCP(65001);
+    setlocale(LC_ALL, ".UTF-8");
+
     tnode* tree = NULL;
     int n, a, choice;
-    
+
     cout << "=== Двоично дърво за претърсване ===\n\n";
     cout << "Въведете брой елементи: ";
     cin >> n;
-    
+
     cout << "Въведете елементите:\n";
     for (int i = 1; i <= n; i++) {
         cin >> a;
         tree = addnode(a, tree);
     }
-    
+
     do {
         cout << "\n=== МЕНЮ ===\n";
         cout << "1. InOrder обхождане (ЛКД)\n";
@@ -161,26 +160,26 @@ int main() {
         cout << "0. Изход\n";
         cout << "Изберете опция: ";
         cin >> choice;
-        
+
         switch(choice) {
             case 1:
                 cout << "InOrder: ";
                 printINORDER(tree);
                 cout << endl;
                 break;
-                
+
             case 2:
                 cout << "PreOrder: ";
                 printPREORDER(tree);
                 cout << endl;
                 break;
-                
+
             case 3:
                 cout << "PostOrder: ";
                 printPOSTORDER(tree);
                 cout << endl;
                 break;
-                
+
             case 4:
                 cout << "Въведете елемент за търсене: ";
                 cin >> a;
@@ -190,14 +189,14 @@ int main() {
                     cout << "Елементът " << a << " не е намерен в дървото.\n";
                 }
                 break;
-                
+
             case 5:
                 cout << "Въведете елемент за добавяне: ";
                 cin >> a;
                 tree = addnode(a, tree);
                 cout << "Елементът е добавен успешно.\n";
                 break;
-                
+
             case 6:
                 cout << "Въведете елемент за изтриване: ";
                 cin >> a;
@@ -206,26 +205,26 @@ int main() {
                 printINORDER(tree);
                 cout << endl;
                 break;
-                
+
             case 7:
                 cout << "Брой възли в дървото: " << Count(tree) << endl;
                 break;
-                
+
             case 8:
                 cout << "Дълбочина на дървото: " << MaxLen(tree) << endl;
                 break;
-                
+
             case 0:
                 cout << "Изход от програмата...\n";
                 break;
-                
+
             default:
                 cout << "Невалидна опция! Опитайте отново.\n";
         }
     } while(choice != 0);
-    
+
     // Освобождаване на паметта
     deleteTree(tree);
-    
+
     return 0;
 }
