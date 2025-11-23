@@ -1,5 +1,5 @@
 // ============================================================
-// BINARY SEARCH TREE - INTERACTIVE MENU VERSION
+// BINARY SEARCH TREE - INTERACTIVE MENU VERSION (CP1251 FIX)
 // ============================================================
 
 #include <iostream>
@@ -13,7 +13,6 @@ struct tnode {
     tnode* right;
 };
 
-// Обхождане на двоично дърво КЛД (Корен, Ляво, Дясно)
 void printPREORDER(tnode* tree) {
     if (tree != NULL) {
         cout << tree->i << " ";
@@ -22,7 +21,6 @@ void printPREORDER(tnode* tree) {
     }
 }
 
-// Обхождане на двоично дърво ЛКД (Ляво, Корен, Дясно)
 void printINORDER(tnode* tree) {
     if (tree != NULL) {
         printINORDER(tree->left);
@@ -31,7 +29,6 @@ void printINORDER(tnode* tree) {
     }
 }
 
-// Обхождане на двоично дърво ЛДК (Ляво, Дясно, Корен)
 void printPOSTORDER(tnode* tree) {
     if (tree != NULL) {
         printPOSTORDER(tree->left);
@@ -40,7 +37,6 @@ void printPOSTORDER(tnode* tree) {
     }
 }
 
-// Добавяне на възел в двоично дърво за претърсване
 tnode* addnode(int x, tnode* &tree) {
     if (tree == NULL) {
         tree = new tnode;
@@ -55,7 +51,6 @@ tnode* addnode(int x, tnode* &tree) {
     return tree;
 }
 
-// Намиране на минималния елемент в дърво
 tnode* findMin(tnode* tree) {
     while (tree->left != NULL) {
         tree = tree->left;
@@ -63,7 +58,6 @@ tnode* findMin(tnode* tree) {
     return tree;
 }
 
-// Изключване на възел от двоично дърво
 void deleteKey(int x, tnode* &tree) {
     if (tree == NULL) {
         cout << "Елементът не съществува в дървото!\n";
@@ -73,28 +67,20 @@ void deleteKey(int x, tnode* &tree) {
         } else if (x > tree->i) {
             deleteKey(x, tree->right);
         } else {
-            // Елементът за изключване е намерен
             if (tree->left && tree->right) {
-                // Върхът има два наследника
-                // Намира се върхът за размяна
                 tnode* replace = findMin(tree->right);
                 tree->i = replace->i;
                 deleteKey(tree->i, tree->right);
             } else {
-                // Елементът има нула или едно поддървета
                 tnode* temp = tree;
-                if (tree->left) {
-                    tree = tree->left;
-                } else {
-                    tree = tree->right;
-                }
-                delete(temp);
+                if (tree->left) tree = tree->left;
+                else tree = tree->right;
+                delete temp;
             }
         }
     }
 }
 
-// Търсене на елемент в дървото
 bool Search(tnode* tree, int x) {
     if (tree == NULL) return false;
     if (tree->i == x) return true;
@@ -102,23 +88,18 @@ bool Search(tnode* tree, int x) {
     else return Search(tree->right, x);
 }
 
-// Намиране на дълбочина на дърво
 int MaxLen(tnode* tree) {
     if (tree == NULL) return -1;
-    int l, r;
-    l = MaxLen(tree->left);
-    r = MaxLen(tree->right);
-    if (l > r) return l + 1;
-    else return r + 1;
+    int l = MaxLen(tree->left);
+    int r = MaxLen(tree->right);
+    return (l > r ? l : r) + 1;
 }
 
-// Преброяване общия брой върхове
 int Count(tnode* tree) {
     if (tree == NULL) return 0;
     return Count(tree->left) + Count(tree->right) + 1;
 }
 
-// Освобождаване на паметта
 void deleteTree(tnode* tree) {
     if (tree != NULL) {
         deleteTree(tree->left);
@@ -128,11 +109,10 @@ void deleteTree(tnode* tree) {
 }
 
 int main() {
-    // WINDOWS - За правилна кирилица:
-    system("chcp 65001 > nul");
-    SetConsoleCP(65001);
-    SetConsoleOutputCP(65001);
-    setlocale(LC_ALL, ".UTF-8");
+    // --- Най-стабилната конфигурация за кирилица ---
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
+    setlocale(LC_ALL, "Bulgarian");
 
     tnode* tree = NULL;
     int n, a, choice;
@@ -183,48 +163,45 @@ int main() {
             case 4:
                 cout << "Въведете елемент за търсене: ";
                 cin >> a;
-                if (Search(tree, a)) {
-                    cout << "Елементът " << a << " е намерен в дървото.\n";
-                } else {
-                    cout << "Елементът " << a << " не е намерен в дървото.\n";
-                }
+                if (Search(tree, a))
+                    cout << "Елементът " << a << " е намерен.\n";
+                else
+                    cout << "Елементът " << a << " не е намерен.\n";
                 break;
 
             case 5:
                 cout << "Въведете елемент за добавяне: ";
                 cin >> a;
-                tree = addnode(a, tree);
-                cout << "Елементът е добавен успешно.\n";
+                addnode(a, tree);
+                cout << "Добавен.\n";
                 break;
 
             case 6:
                 cout << "Въведете елемент за изтриване: ";
                 cin >> a;
                 deleteKey(a, tree);
-                cout << "Дървото след изтриване (InOrder): ";
+                cout << "След изтриване (InOrder): ";
                 printINORDER(tree);
                 cout << endl;
                 break;
 
             case 7:
-                cout << "Брой възли в дървото: " << Count(tree) << endl;
+                cout << "Брой възли: " << Count(tree) << endl;
                 break;
 
             case 8:
-                cout << "Дълбочина на дървото: " << MaxLen(tree) << endl;
+                cout << "Дълбочина: " << MaxLen(tree) << endl;
                 break;
 
             case 0:
-                cout << "Изход от програмата...\n";
+                cout << "Изход...\n";
                 break;
 
             default:
-                cout << "Невалидна опция! Опитайте отново.\n";
+                cout << "Невалидна опция!\n";
         }
     } while(choice != 0);
 
-    // Освобождаване на паметта
     deleteTree(tree);
-
     return 0;
 }
